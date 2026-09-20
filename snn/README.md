@@ -220,3 +220,24 @@ road_crossing (az 全环, el ±5°) 与 uav_cap (az 全环, el 25-65°).
 联同 tfln-dispersion-lab 的六层知识图谱 (器件->仿真器->方法->实验->结论->应用):
 图 1 全图 (45 节点/44 边), 图 2 证据链 (两条破局路径汇聚), 双项目里程碑对照表
 (含实测数字与出处). 机器可读版 notebooks/kg_data.json. 构建脚本 build_kg.py.
+
+## 道路对象线 (2026-02, road_car_person.py / road_object_extractor.py / radarscenes_stats.py)
+
+**① 止gap (本地 ModelNet40 car vs person, 397/186)**: 缩小分类对象到道路二类的验证:
+
+| 预设 | 单次 HRRP+CNN1D | 4 波束x3 步+ESN+角度 |
+|---|---|---|
+| road_crossing | 0.817 | **0.892** |
+| uav_cap | 0.758 | **0.866** |
+
+对比 10 类通用 (road: 0.294/0.656): 缩小范围+类间差异大 => 0.87-0.89, 假设证实.
+图: outputs_isal/road_car_person/.
+
+**② KITTI 提取器** road_object_extractor.py: 解析 velodyne/label_2/calib,
+框内点裁剪 (Tr_velo_to_cam+R0_rect 变换), 输出 data/road_objects.npz
+(对象点云+类+遮挡/截断元数据), --selftest 已验证几何正确.
+等用户注册下载 KITTI 后: `python road_object_extractor.py --root <KITTI>/training`.
+
+**③ RadarScenes**: Zenodo 免费真实车载毫米波数据 (11 类, 多普勒+track_id),
+下载到 data/radarscenes/; radarscenes_stats.py 出 类分布/各类多普勒/RCS 统计
+(供杂波与散射统计标定 + 真实数据分类基准).
