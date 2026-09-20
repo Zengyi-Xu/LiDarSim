@@ -1,0 +1,451 @@
+{
+  "nodes": [
+    {
+      "id": "hw_lum",
+      "label": "Lumerical 仿真\n(FDTD/时域)",
+      "layer": "器件层"
+    },
+    {
+      "id": "hw_grat",
+      "label": "chirp2d 啁啾光栅\n群延迟纹波 ~1ps",
+      "layer": "器件层"
+    },
+    {
+      "id": "hw_ring",
+      "label": "TFLN 微环蓄水池\n权重 6bit",
+      "layer": "器件层"
+    },
+    {
+      "id": "hw_qd",
+      "label": "QD-MLL PCU\n6.74bit 权重",
+      "layer": "器件层"
+    },
+    {
+      "id": "hw_dly",
+      "label": "TFLN 电光可调\n延迟线 (Pockels)",
+      "layer": "器件层"
+    },
+    {
+      "id": "sim_pls",
+      "label": "simulator.py\n相参脉冲串+LFM脉压",
+      "layer": "仿真器层"
+    },
+    {
+      "id": "sim_sem",
+      "label": "semantic_sim.py\n多散射体语义回波",
+      "layer": "仿真器层"
+    },
+    {
+      "id": "sim_isal",
+      "label": "isal_range_profile\nHRRP/转台ISAL",
+      "layer": "仿真器层"
+    },
+    {
+      "id": "sim_3dv",
+      "label": "isal_3dview\n3D视角 (road/uav)",
+      "layer": "仿真器层"
+    },
+    {
+      "id": "m_lsm",
+      "label": "LSM/ESN 蓄水池\n256-512 神经元",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_enc",
+      "label": "IQ 群体发放率编码\n(唯一可用编码)",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_cfar",
+      "label": "CA-CFAR / FFT\n经典基线",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_inv",
+      "label": "不变特征\n自相关 / 块剖面",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_blk",
+      "label": "块处理 + 质心\n多普勒补偿",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_dly",
+      "label": "delay learning\n(可调延迟训练)",
+      "layer": "方法层"
+    },
+    {
+      "id": "m_ann",
+      "label": "PointNet / PN2 / DGCNN\nANN 上限基准",
+      "layer": "方法层"
+    },
+    {
+      "id": "t_m1",
+      "label": "隔壁 M1\n时标分离验证",
+      "layer": "实验层"
+    },
+    {
+      "id": "t_m2",
+      "label": "隔壁 M2\n随机蓄水池~0.4",
+      "layer": "实验层"
+    },
+    {
+      "id": "t_m3",
+      "label": "隔壁 M3\n延迟学习+延迟预算",
+      "layer": "实验层"
+    },
+    {
+      "id": "t_m4",
+      "label": "隔壁 M4\nISAL 散斑去相干",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_m1",
+      "label": "本项目 M1\n器件容差",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_m2",
+      "label": "本项目 M2\nK杂波 CFAR 172×",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_m3",
+      "label": "本项目 M3\n微多普勒不变性",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_m4",
+      "label": "本项目 M4\n硬件协同 0.14mW",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_m6",
+      "label": "本项目 M6\n语义分类 0.81",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_cl",
+      "label": "分类上限探测\noracle 0.74",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_sc",
+      "label": "多波束扫描\n0.4→0.68",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_ann",
+      "label": "ANN 基准\nPointNet 0.986",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_3d",
+      "label": "3D 视角扫描\nE1-E3 (本次)",
+      "layer": "实验层"
+    },
+    {
+      "id": "c_ts",
+      "label": "① 时标分离:\nps光+ns电读出 成立",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_cap",
+      "label": "② 随机蓄水池\n表达上限 ~0.4 (互证)",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_ng",
+      "label": "③ 非高斯杂波检测:\n独家优势象限",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_inf",
+      "label": "④ 信息受限:\noracle 实验定界",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_ord",
+      "label": "⑤ 顺序=几何信息\n0.68 vs 打乱 0.50",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_sp",
+      "label": "⑥ 光学粗糙目标:\n相干ISAL方位散焦",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_dv",
+      "label": "⑦ 分工架构:\n前端积累+不变性读出",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_en",
+      "label": "⑧ 能效 1.36nJ/CPI\n~200× vs 数字FFT",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_gap",
+      "label": "⑨ 扫描链 0.68 vs\n3D 点云 0.986",
+      "layer": "结论层"
+    },
+    {
+      "id": "a_plan",
+      "label": "博士后计划\nM5 + plan_draft",
+      "layer": "应用层"
+    },
+    {
+      "id": "a_lid",
+      "label": "低SNR激光雷达\n探测测速",
+      "layer": "应用层"
+    },
+    {
+      "id": "a_sar",
+      "label": "SAR / 合成孔径前端",
+      "layer": "应用层"
+    },
+    {
+      "id": "a_mic",
+      "label": "低光子相干显微\n(散斑组织)",
+      "layer": "应用层"
+    },
+    {
+      "id": "a_rd",
+      "label": "道路监控 (尘雾)",
+      "layer": "应用层"
+    },
+    {
+      "id": "a_uav",
+      "label": "UAV 交通监管\n(上半球)",
+      "layer": "应用层"
+    }
+  ],
+  "edges": [
+    {
+      "src": "hw_lum",
+      "dst": "hw_grat",
+      "relation": "生成"
+    },
+    {
+      "src": "hw_grat",
+      "dst": "p_m1",
+      "relation": "纹波容差"
+    },
+    {
+      "src": "hw_grat",
+      "dst": "sim_isal",
+      "relation": "脉压前端"
+    },
+    {
+      "src": "hw_ring",
+      "dst": "m_lsm",
+      "relation": "物理载体"
+    },
+    {
+      "src": "hw_qd",
+      "dst": "p_m4",
+      "relation": "权重基准"
+    },
+    {
+      "src": "hw_dly",
+      "dst": "m_dly",
+      "relation": "物理载体"
+    },
+    {
+      "src": "sim_pls",
+      "dst": "p_m1",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_pls",
+      "dst": "p_m2",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_pls",
+      "dst": "p_m3",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_sem",
+      "dst": "p_m6",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_isal",
+      "dst": "t_m4",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_isal",
+      "dst": "p_sc",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_3dv",
+      "dst": "p_3d",
+      "relation": "信号源"
+    },
+    {
+      "src": "m_enc",
+      "dst": "m_lsm",
+      "relation": "唯一可用编码"
+    },
+    {
+      "src": "m_lsm",
+      "dst": "p_m1",
+      "relation": ""
+    },
+    {
+      "src": "m_lsm",
+      "dst": "p_m2",
+      "relation": ""
+    },
+    {
+      "src": "m_lsm",
+      "dst": "p_m3",
+      "relation": ""
+    },
+    {
+      "src": "m_cfar",
+      "dst": "p_m2",
+      "relation": "对照"
+    },
+    {
+      "src": "m_inv",
+      "dst": "p_m3",
+      "relation": "决定性"
+    },
+    {
+      "src": "m_inv",
+      "dst": "p_m6",
+      "relation": ""
+    },
+    {
+      "src": "m_blk",
+      "dst": "p_m6",
+      "relation": "必要条件"
+    },
+    {
+      "src": "m_ann",
+      "dst": "p_ann",
+      "relation": ""
+    },
+    {
+      "src": "t_m1",
+      "dst": "c_ts",
+      "relation": ""
+    },
+    {
+      "src": "t_m2",
+      "dst": "c_cap",
+      "relation": ""
+    },
+    {
+      "src": "p_m3",
+      "dst": "c_cap",
+      "relation": "交叉互证"
+    },
+    {
+      "src": "t_m2",
+      "dst": "m_dly",
+      "relation": "破局动机"
+    },
+    {
+      "src": "m_dly",
+      "dst": "t_m3",
+      "relation": ""
+    },
+    {
+      "src": "t_m4",
+      "dst": "c_sp",
+      "relation": ""
+    },
+    {
+      "src": "t_m4",
+      "dst": "p_sc",
+      "relation": "响应: 幅度域多角度"
+    },
+    {
+      "src": "p_m2",
+      "dst": "c_ng",
+      "relation": ""
+    },
+    {
+      "src": "p_cl",
+      "dst": "c_inf",
+      "relation": ""
+    },
+    {
+      "src": "p_m3",
+      "dst": "c_dv",
+      "relation": ""
+    },
+    {
+      "src": "p_m4",
+      "dst": "c_en",
+      "relation": ""
+    },
+    {
+      "src": "p_sc",
+      "dst": "c_ord",
+      "relation": ""
+    },
+    {
+      "src": "p_ann",
+      "dst": "c_gap",
+      "relation": ""
+    },
+    {
+      "src": "p_sc",
+      "dst": "c_gap",
+      "relation": ""
+    },
+    {
+      "src": "p_3d",
+      "dst": "a_rd",
+      "relation": "场景预设"
+    },
+    {
+      "src": "p_3d",
+      "dst": "a_uav",
+      "relation": "场景预设"
+    },
+    {
+      "src": "c_cap",
+      "dst": "m_dly",
+      "relation": "破局A"
+    },
+    {
+      "src": "c_cap",
+      "dst": "p_sc",
+      "relation": "破局B"
+    },
+    {
+      "src": "c_dv",
+      "dst": "a_plan",
+      "relation": ""
+    },
+    {
+      "src": "c_ng",
+      "dst": "a_rd",
+      "relation": "散斑/尘雾"
+    },
+    {
+      "src": "t_m3",
+      "dst": "a_plan",
+      "relation": "WP"
+    },
+    {
+      "src": "c_inf",
+      "dst": "a_plan",
+      "relation": ""
+    },
+    {
+      "src": "c_ord",
+      "dst": "a_plan",
+      "relation": ""
+    }
+  ]
+}
