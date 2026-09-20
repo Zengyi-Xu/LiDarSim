@@ -301,7 +301,7 @@ def main():
             loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
-            loss_s += float(loss)
+            loss_s += loss.item()
             nb += 1
         sched.step()
         acc = evaluate(model, lte)

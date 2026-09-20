@@ -158,3 +158,40 @@ python experiment.py --n-train 300 --n-test 150 --snr -10 0 --out outputs_smoke 
 
 **结论**: 语义分类在检测典型工作点 (+5dB, 有效 SNR~23dB) 达 0.79-0.81/CPI;
 仍是信息受限 (MLP2 不胜 ridge); 系统价值仍在低功耗前端买 CPI.
+
+## ANN 上限基准 (2026-02, pointcloud_ann_bench.py)
+
+**目的**: 回答"3D 点云不限模型规模能到多高的分类准确率"——为计划书提供 ANN 天花板
+参照 (单次 HRRP 0.4 / SNN 扫描链 0.68 / ANN 3D 点云 = 本脚本).
+
+**依赖**: 仅 torch + numpy + pandas + pyarrow, 纯 PyTorch 实现 (无 PyG), GPU 机器
+`pip install torch pandas pyarrow` 即可.
+
+```bash
+# 冒烟 (CPU, <1 min)
+python snn/pointcloud_ann_bench.py --smoke
+# GPU 正式跑 (10 类子集, 与 snn 实验同设定)
+python snn/pointcloud_ann_bench.py --model pointnet     --n_points 1024 --epochs 200
+python snn/pointcloud_ann_bench.py --model pointnet2_ssg --n_points 1024 --epochs 200
+python snn/pointcloud_ann_bench.py --model dgcnn        --n_points 1024 --epochs 200
+# 全 40 类 (文献可比)
+python snn/pointcloud_ann_bench.py --model dgcnn --classes 40 --n_points 1024 --epochs 200
+```
+
+**数据**: data/modelnet40_{train,test}.parquet (2048 点/形状). 默认前 10 类
+(3643 训练 / 710 测试, 类别 64–889/类不均衡). 训练增强: 随机重采样/抖动/
+点丢弃(85-100%); 评估含 T=10 次重采样投票 (TTA). 输出: outputs_classify/ann_bench/
+{model}_best.pt + {model}_summary.json.
+
+**预期数字** (文献参考: 全 40 类 ModelNet40 @1024 点; 子集 10 类因类数少且形状
+差异大, 应高 3-6 个点; 本数据每类仅 ~360 样本, 可能比文献低 1-3 个点):
+
+| 模型 | ModelNet40 文献 | 10 类子集预期 |
+|---|---|---|
+| PointNet (无 TNet) | ~87-89% | ~91-94% |
+| PointNet++ SSG | 90.7% | ~94-96% |
+| DGCNN (k=32) | 92.2-92.9% | ~95-97% |
+
+**口径注意**: "0.84 上限"出自受限配置 (冻结/浅层读出), 不是 ANN 天花板;
+本基准的数字才是计划书里 "3D 点云 ANN 上限" 的引用值. GPU 实测后回填
+outputs_classify/ann_bench/ 并更新此表.
