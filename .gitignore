@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pt
+*.npz
+outputs/
+outputs_classify/
+outputs_smoke/
+checkpoints/
+data/
+.ipynb_checkpoints/
+.venv*/
