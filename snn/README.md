@@ -241,3 +241,23 @@ road_crossing (az 全环, el ±5°) 与 uav_cap (az 全环, el 25-65°).
 **③ RadarScenes**: Zenodo 免费真实车载毫米波数据 (11 类, 多普勒+track_id),
 下载到 data/radarscenes/; radarscenes_stats.py 出 类分布/各类多普勒/RCS 统计
 (供杂波与散射统计标定 + 真实数据分类基准).
+
+## 参数化道路车辆 7 类 (2026-02, road_vehicles.py)
+
+几何原型库 (米制, 尺寸真实分布): sedan/suv/truck/bus/motorcycle/bicycle/pedestrian,
+表面采样点云, **保留米制尺寸** (尺寸本身是判别特征), 剖面窗口 D=16m.
+2450 训练 / 700 测试, 7 类:
+
+| 预设 | 单次 HRRP+CNN1D | 4 波束x3 步+ESN+角度 |
+|---|---|---|
+| road_crossing | 0.660 | **0.919** |
+| uav_cap | 0.659 | **0.963** |
+
+关键发现: 家具类 uav 劣于 road (0.58<0.66), 车辆类 uav **反转占优** (0.96>0.92) ——
+视角分配必须匹配类信息分布 (E3 俯仰标价结论的应用级实证; 车辆顶视足迹信息量大,
+家具侧视轮廓信息量大). 图: outputs_isal/road_vehicles/ (原型 3D 散点 + 尺寸分布).
+
+## road_kitti_experiment.py (备好待数据)
+
+road_object_extractor.py 提取的 KITTI 对象库 -> 同款扫描链 (类合并: car/van->car,
+truck/pedestrian/cyclist), 真实稀疏+遮挡点云下的诚实测试. KITTI 下载后即跑.

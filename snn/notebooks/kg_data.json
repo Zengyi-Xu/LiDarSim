@@ -146,6 +146,16 @@
       "layer": "实验层"
     },
     {
+      "id": "p_rd",
+      "label": "道路二类 car/person\nscan 0.892",
+      "layer": "实验层"
+    },
+    {
+      "id": "p_rv",
+      "label": "参数化道路 7 类\nscan 0.92/0.96",
+      "layer": "实验层"
+    },
+    {
       "id": "c_ts",
       "label": "① 时标分离:\nps光+ns电读出 成立",
       "layer": "结论层"
@@ -188,6 +198,11 @@
     {
       "id": "c_gap",
       "label": "⑨ 扫描链 0.68 vs\n3D 点云 0.986",
+      "layer": "结论层"
+    },
+    {
+      "id": "c_vw",
+      "label": "⑩ 视角分配跟随\n类信息分布",
       "layer": "结论层"
     },
     {
@@ -444,6 +459,46 @@
     },
     {
       "src": "c_ord",
+      "dst": "a_plan",
+      "relation": ""
+    },
+    {
+      "src": "sim_3dv",
+      "dst": "p_rd",
+      "relation": "信号源"
+    },
+    {
+      "src": "sim_3dv",
+      "dst": "p_rv",
+      "relation": "信号源"
+    },
+    {
+      "src": "p_3d",
+      "dst": "c_vw",
+      "relation": "E3: 赤道>半球"
+    },
+    {
+      "src": "p_rv",
+      "dst": "c_vw",
+      "relation": "uav>road 反转实证"
+    },
+    {
+      "src": "p_rd",
+      "dst": "a_rd",
+      "relation": "应用验证"
+    },
+    {
+      "src": "p_rv",
+      "dst": "a_rd",
+      "relation": "0.92"
+    },
+    {
+      "src": "p_rv",
+      "dst": "a_uav",
+      "relation": "0.96"
+    },
+    {
+      "src": "c_vw",
       "dst": "a_plan",
       "relation": ""
     }

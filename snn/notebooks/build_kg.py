@@ -71,6 +71,8 @@ NODES = [
     ("p_sc", "多波束扫描\n0.4→0.68", 3),
     ("p_ann","ANN 基准\nPointNet 0.986", 3),
     ("p_3d", "3D 视角扫描\nE1-E3 (本次)", 3),
+    ("p_rd", "道路二类 car/person\nscan 0.892", 3),
+    ("p_rv", "参数化道路 7 类\nscan 0.92/0.96", 3),
     ("c_ts", "① 时标分离:\nps光+ns电读出 成立", 4),
     ("c_cap","② 随机蓄水池\n表达上限 ~0.4 (互证)", 4),
     ("c_ng", "③ 非高斯杂波检测:\n独家优势象限", 4),
@@ -80,6 +82,7 @@ NODES = [
     ("c_dv", "⑦ 分工架构:\n前端积累+不变性读出", 4),
     ("c_en", "⑧ 能效 1.36nJ/CPI\n~200× vs 数字FFT", 4),
     ("c_gap","⑨ 扫描链 0.68 vs\n3D 点云 0.986", 4),
+    ("c_vw", "⑩ 视角分配跟随\n类信息分布", 4),
     ("a_plan","博士后计划\nM5 + plan_draft", 5),
     ("a_lid", "低SNR激光雷达\n探测测速", 5),
     ("a_sar", "SAR / 合成孔径前端", 5),
@@ -105,6 +108,11 @@ EDGES = [
     ("p_3d","a_uav","场景预设"), ("c_cap","m_dly","破局A"), ("c_cap","p_sc","破局B"),
     ("c_dv","a_plan",""), ("c_ng","a_rd","散斑/尘雾"), ("t_m3","a_plan","WP"),
     ("c_inf","a_plan",""), ("c_ord","a_plan",""),
+    ("sim_3dv","p_rd","信号源"), ("sim_3dv","p_rv","信号源"),
+    ("p_3d","c_vw","E3: 赤道>半球"),
+    ("p_rv","c_vw","uav>road 反转实证"),
+    ("p_rd","a_rd","应用验证"), ("p_rv","a_rd","0.92"), ("p_rv","a_uav","0.96"),
+    ("c_vw","a_plan",""),
 ]
 idx = {n[0]: i for i, n in enumerate(NODES)}
 # 自动布局: 层内均分 y
@@ -208,7 +216,9 @@ md(r"""## 双项目里程碑对照表（实测数字与出处）
 | M6 语义分类 | 块+补偿链：0.79–0.81 @+5dB；v1 单门 0.26（阴性对照） | notebooks/m6 |
 | 多波束扫描 | 单次 0.36–0.42 → 4 波束×3 步+ESN **0.68**；打乱 0.50 | isal_beam_scan.log |
 | ANN 上限 | 裸 PointNet（CPU 15ep，256 点）**0.986** | ann_bench_cpu_sanity |
-| 3D 视角扫描 | road_crossing / uav_cap 预设 + 跨分布 + 俯仰维标价（本笔记本下方引用） | outputs_isal/3dview |
+| 3D 视角扫描 | road/uav 预设；**跨分布 road→uav=0.118（≈随机）**；俯仰标价：赤道 0.712 > 双环 0.691 > 半球 0.338 | outputs_isal/3dview |
+| 道路二类 | car vs person：单次 0.82 / 扫描 **0.89**；uav 0.76/0.87 | road_car_person |
+| 参数化 7 类 | road 0.66→**0.92**，uav 0.66→**0.96**——家具类 uav 劣于 road、车辆类反转，视角分配须匹配类信息分布 | road_vehicles |
 
 ### 交叉引用关系（两个项目如何咬合）
 
