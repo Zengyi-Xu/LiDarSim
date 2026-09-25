@@ -30,7 +30,8 @@ OUT = HERE / "outputs_isal" / "3dview"
 OUT.mkdir(parents=True, exist_ok=True)
 
 from isal_range_profile import (get_data, make_scatterers, ou_phase_walk,
-                                ESN, ce_readout, cnn1d_acc, N_RNG, SEED)
+                                ESN, ce_readout, cnn1d_acc, N_RNG, SEED,
+                                DEVICE)
 
 D = 4.0
 SCEN = {"road_crossing": (-5.0, 5.0), "uav_cap": (25.0, 65.0)}  # el 范围 (度)
@@ -110,6 +111,78 @@ def make_dataset(X, amp, ph0, scenario, kind, seed_off=0, add_angle=False):
             mag = np.concatenate([mag, los], 1)
         out_q[i] = mag
     return out_s, out_q
+
+
+# ---------------- GPU/批量版仿真（数值与原实现统计等价） ----------------
+def profiles_3d_batch(X, amp, ph0, views, ou, D, chunk=2048):
+    """批量版 profiles_3d（theta_c=inf 路径），在 DEVICE 上运行。
+
+    X: (B,P,3); amp, ph0: (B,P); views: (B,M,2); ou: (B,M,P)。
+    返回 (B,M,N_RNG) complex64 numpy。随机量(视角/ou)在调用方用
+    与原实现完全相同的 numpy 种子流生成，故统计与数值路径一致。
+    """
+    cell = D / N_RNG
+    lam = cell / 8.0
+    B, M = views.shape[0], views.shape[1]
+    outs = np.empty((B, M, N_RNG), dtype=np.complex64)
+    midx = torch.arange(M, device=DEVICE)[:, None] * N_RNG      # (M,1)
+    for b0 in range(0, B, chunk):
+        b1 = min(b0 + chunk, B)
+        xyz = torch.tensor(X[b0:b1] * (D / 2.0), device=DEVICE)         # (b,P,3)
+        vw = torch.tensor(views[b0:b1], dtype=torch.float32,
+                          device=DEVICE)                                # (b,M,2)
+        az, el = vw[..., 0], vw[..., 1]
+        los = torch.stack([torch.cos(el) * torch.cos(az),
+                           torch.cos(el) * torch.sin(az),
+                           torch.sin(el)], dim=-1)                      # (b,M,3)
+        r = torch.einsum("bmk,bpk->bmp", los, xyz)                      # (b,M,P)
+        phase = 4 * np.pi * r / lam \
+            + torch.tensor(ph0[b0:b1], device=DEVICE)[:, None, :] \
+            + np.pi * torch.tensor(ou[b0:b1], device=DEVICE)
+        contrib = torch.tensor(amp[b0:b1], device=DEVICE)[:, None, :] \
+            * torch.complex(torch.cos(phase), torch.sin(phase))
+        idx = torch.clamp(((r + D / 2.0) / cell).floor().long(), 0, N_RNG - 1)
+        prof = torch.zeros(b1 - b0, M * N_RNG, dtype=torch.complex64,
+                           device=DEVICE)
+        flat = (idx + midx[None]).reshape(b1 - b0, -1)
+        prof.scatter_add_(1, flat, contrib.reshape(b1 - b0, -1))
+        outs[b0:b1] = prof.reshape(b1 - b0, M, N_RNG).cpu().numpy()
+    return outs
+
+
+def make_dataset_fast(X, amp, ph0, scenario, kind, seed_off=0,
+                      add_angle=False, chunk=2048):
+    """make_dataset 的批量/GPU 版：相同种子流、相同输出形状与含义。
+
+    kind 参数仅为兼容原接口（本实现两种输出都生成）。
+    """
+    views_scan = scan_views(scenario)
+    T = len(views_scan)
+    N, P = X.shape[0], X.shape[1]
+    v1 = np.empty((N, 1, 2))
+    ou1 = np.empty((N, 1, P), np.float32)
+    jit = np.empty((N, T, 2), np.float32)
+    ou2 = np.empty((N, T, P), np.float32)
+    for i in range(N):
+        rng = np.random.default_rng(SEED + 1000 + seed_off + i)
+        v1[i, 0] = sample_views(scenario, rng)
+        ou1[i, 0] = rng.standard_normal(P)               # theta_c=inf: (1,P)
+        rng2 = np.random.default_rng(SEED + 2000 + seed_off + i)
+        jit[i] = rng2.normal(0, np.deg2rad(0.3), (T, 2))
+        ou2[i] = rng2.standard_normal(P)                 # 广播到 (T,P)
+    p1 = profiles_3d_batch(X, amp, ph0, v1, ou1, D, chunk=chunk)
+    out_s = np.abs(p1[:, 0]).astype(np.float32)
+    p2 = profiles_3d_batch(X, amp, ph0,
+                           np.broadcast_to(views_scan, (N, T, 2)) + jit,
+                           ou2, D, chunk=chunk)
+    mag = np.abs(p2).astype(np.float32)
+    if add_angle:
+        los = np.stack([np.cos(views_scan[:, 1]) * np.cos(views_scan[:, 0]),
+                        np.cos(views_scan[:, 1]) * np.sin(views_scan[:, 0]),
+                        np.sin(views_scan[:, 1])], 1).astype(np.float32)
+        mag = np.concatenate(
+            [mag, np.broadcast_to(los[None], (N, T, 3))], axis=2)
+    return out_s, mag
 
 
 # ---------------- 实验 ----------------

@@ -57,7 +57,7 @@ SEED = 0
 N_RNG = 128          # range cells
 N_ANG_ISAL = 256     # aspect samples for ISAL imaging
 TH_ISAL = np.deg2rad(3.0)   # ISAL coherent aperture half-width
-DEVICE = "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 # ---------------------------------------------------------------------------
@@ -150,15 +150,15 @@ def ridge_acc(Xtr, ytr, Xte, yte, n_classes, alpha=1.0):
 def ce_readout(Xtr, ytr, Xte, yte, n_classes, epochs=300, lr=3e-3, seed=SEED):
     torch.manual_seed(seed)
     Xtr, Xte = standardize(Xtr, Xte)
-    lin = nn.Linear(Xtr.shape[1], n_classes)
+    lin = nn.Linear(Xtr.shape[1], n_classes).to(DEVICE)
     opt = torch.optim.Adam(lin.parameters(), lr=lr)
     lossf = nn.CrossEntropyLoss()
-    Xtr_t = torch.tensor(Xtr, dtype=torch.float32)
-    ytr_t = torch.tensor(ytr, dtype=torch.long)
-    Xte_t = torch.tensor(Xte, dtype=torch.float32)
+    Xtr_t = torch.tensor(Xtr, dtype=torch.float32, device=DEVICE)
+    ytr_t = torch.tensor(ytr, dtype=torch.long, device=DEVICE)
+    Xte_t = torch.tensor(Xte, dtype=torch.float32, device=DEVICE)
     n = len(Xtr_t)
     for ep in range(epochs):
-        perm = torch.randperm(n)
+        perm = torch.randperm(n, device=DEVICE)
         for i in range(0, n, 256):
             idx = perm[i:i + 256]
             opt.zero_grad()
@@ -166,7 +166,7 @@ def ce_readout(Xtr, ytr, Xte, yte, n_classes, epochs=300, lr=3e-3, seed=SEED):
             loss.backward()
             opt.step()
     with torch.no_grad():
-        pred = lin(Xte_t).argmax(1).numpy()
+        pred = lin(Xte_t).argmax(1).cpu().numpy()
     return float((pred == yte).mean()), pred
 
 
@@ -182,13 +182,15 @@ def cnn1d_acc(Xtr, ytr, Xte, yte, n_classes, epochs=300, lr=3e-3, seed=SEED):
         nn.Conv1d(16, 32, 5, padding=2), nn.ReLU(), nn.MaxPool1d(2),
         nn.Flatten(),
         nn.Linear(Xtr.shape[1] // 4 * 32, 64), nn.ReLU(), nn.Dropout(0.2),
-        nn.Linear(64, n_classes))
+        nn.Linear(64, n_classes)).to(DEVICE)
     opt = torch.optim.Adam(net.parameters(), lr=lr)
     lossf = nn.CrossEntropyLoss()
+    Xtr_t = Xtr_t.to(DEVICE); Xte_t = Xte_t.to(DEVICE)
+    ytr_t = ytr_t.to(DEVICE); yte_t = yte_t.to(DEVICE)
     n = len(Xtr_t)
     net.train()
     for ep in range(epochs):
-        perm = torch.randperm(n)
+        perm = torch.randperm(n, device=DEVICE)
         for i in range(0, n, 256):
             idx = perm[i:i + 256]
             opt.zero_grad()
@@ -197,8 +199,8 @@ def cnn1d_acc(Xtr, ytr, Xte, yte, n_classes, epochs=300, lr=3e-3, seed=SEED):
             opt.step()
     net.eval()
     with torch.no_grad():
-        pred = net(Xte_t).argmax(1).numpy()
-    return float((pred == yte_t.numpy()).mean())
+        pred = net(Xte_t).argmax(1).cpu().numpy()
+    return float((pred == yte_t.cpu().numpy()).mean())
 
 
 def multi_look_profiles(X, amp, ph0, D, n_looks, snr_db=None, seed_off=0):
@@ -227,15 +229,16 @@ class ESN(object):
         self.leak = leak
 
     def features(self, U):
-        B = U.shape[0]
-        x = np.zeros((B, self.W.shape[0]), dtype=np.float32)
-        ssum = np.zeros_like(x)
+        U_t = torch.tensor(U, dtype=torch.float32, device=DEVICE)
+        Win = torch.tensor(self.Win, device=DEVICE)
+        W = torch.tensor(self.W, device=DEVICE)
+        x = torch.zeros(U.shape[0], W.shape[0], device=DEVICE)
+        ssum = torch.zeros_like(x)
         for t in range(U.shape[1]):
-            u = U[:, t, :]
-            x = (1 - self.leak) * x + self.leak * np.tanh(
-                u @ self.Win.T + x @ self.W.T)
+            x = (1 - self.leak) * x + self.leak * torch.tanh(
+                U_t[:, t, :] @ Win.T + x @ W.T)
             ssum += x
-        return np.concatenate([ssum / U.shape[1], x], axis=1)
+        return torch.cat([ssum / U.shape[1], x], 1).cpu().numpy()
 
 
 # ---------------------------------------------------------------------------
