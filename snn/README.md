@@ -257,10 +257,20 @@ road_crossing (az 全环, el ±5°) 与 uav_cap (az 全环, el 25-65°).
 视角分配必须匹配类信息分布 (E3 俯仰标价结论的应用级实证; 车辆顶视足迹信息量大,
 家具侧视轮廓信息量大). 图: outputs_isal/road_vehicles/ (原型 3D 散点 + 尺寸分布).
 
-## road_kitti_experiment.py (备好待数据)
+## road_kitti_experiment.py (KITTI 真实道路对象)
 
 road_object_extractor.py 提取的 KITTI 对象库 -> 同款扫描链 (类合并: car/van->car,
-truck/pedestrian/cyclist), 真实稀疏+遮挡点云下的诚实测试. KITTI 下载后即跑.
+truck/pedestrian/cyclist), 真实稀疏+遮挡点云下的诚实测试.
+
+| 预算 | 训练/测试 | 单次 HRRP+CNN1D | 4 波束x3 步+ESN+角度 |
+|---|---|---|---|
+| 小预算 (1200/类) | — | road 0.657 / uav 0.419 | road 0.766 / uav 0.631 |
+| **全量预算 (75% train)** | 21558 / 7188 | **road 0.872 / uav 0.758** | **road 0.923 / uav 0.857** |
+
+全量预算结论: road_crossing 扫描链 **0.923 > 0.85** 达标; 但相对单次的增益收窄到
++0.051 (road) / +0.099 (uav), 未保持小预算时的 ≥+0.10. 这说明 0.766 瓶颈主要不是
+训练量, 而是单次 HRRP 本身的信息: 当训练数据充足后, 单次 HRRP 已能学到大部分
+可辨识信息, 扫描链的额外视角带来的边际增益随之减小.
 
 ## M7 信息量匹配分类对比 (2026-09-24, m7_matched_info.py)
 

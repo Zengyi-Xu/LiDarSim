@@ -50,7 +50,7 @@ MN40 = ["airplane", "bathtub", "bed", "bench", "bookshelf", "bottle", "bowl",
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "outputs_isal")
 os.makedirs(OUT, exist_ok=True)
-TFLN_RESULTS = r"D:\kimi_workspace\tfln-dispersion-lab\results\snn"
+TFLN_RESULTS = os.path.join(HERE, "..", "outputs_tfln_results", "snn")
 os.makedirs(TFLN_RESULTS, exist_ok=True)
 
 SEED = 0
