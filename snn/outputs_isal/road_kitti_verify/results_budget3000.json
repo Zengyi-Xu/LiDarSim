@@ -1,0 +1,75 @@
+{
+  "tag": "budget3000",
+  "n_tr_per": 3000,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "n_train": 7706,
+      "n_test": 21040,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.8477186311787073,
+        "scan_chain_esn_angle": 0.9154467680608365
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.6417775665399239,
+        "scan_chain_esn_angle": 0.7999049429657795
+      }
+    },
+    {
+      "seed": 1,
+      "n_train": 7706,
+      "n_test": 21040,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.8201520912547529,
+        "scan_chain_esn_angle": 0.9125475285171103
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.6138307984790875,
+        "scan_chain_esn_angle": 0.8122623574144486
+      }
+    },
+    {
+      "seed": 2,
+      "n_train": 7706,
+      "n_test": 21040,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.8507604562737643,
+        "scan_chain_esn_angle": 0.9134505703422053
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.6486692015209126,
+        "scan_chain_esn_angle": 0.8095532319391635
+      }
+    }
+  ],
+  "per_class_names": [
+    "car",
+    "truck",
+    "pedestrian",
+    "cyclist"
+  ],
+  "summary": {
+    "road_crossing": {
+      "single_mean": 0.8395437262357414,
+      "single_std": 0.013768074312315325,
+      "scan_mean": 0.9138149556400507,
+      "scan_std": 0.0012113298386321203,
+      "gain_mean": 0.07427122940430923,
+      "gain_std": 0.012979743226250996
+    },
+    "uav_cap": {
+      "single_mean": 0.6347591888466414,
+      "single_std": 0.01506368261106463,
+      "scan_mean": 0.8072401774397973,
+      "scan_std": 0.0053034007204071755,
+      "gain_mean": 0.1724809885931559,
+      "gain_std": 0.018384302382245452
+    }
+  },
+  "wall_time_s": 120.88545083999634
+}

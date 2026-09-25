@@ -1,0 +1,80 @@
+{
+  "task": "V8 synthetic-vs-real, 4-class merged, KITTI-parity budget",
+  "n_per_merged_class": 7186,
+  "classes": [
+    "car",
+    "truck",
+    "pedestrian",
+    "cyclist"
+  ],
+  "kitti_reference": {
+    "road_crossing": {
+      "single": 0.871,
+      "scan": 0.924
+    },
+    "uav_cap": {
+      "single": 0.754,
+      "scan": 0.86
+    }
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "n_train": 21556,
+      "n_test": 7188,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.9415692821368948,
+        "scan_chain_esn_angle": 1.0
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.9254312743461325,
+        "scan_chain_esn_angle": 0.9993043962159154
+      }
+    },
+    {
+      "seed": 1,
+      "n_train": 21556,
+      "n_test": 7188,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.9375347801892042,
+        "scan_chain_esn_angle": 1.0
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.9258486366165832,
+        "scan_chain_esn_angle": 0.9995826377295493
+      }
+    },
+    {
+      "seed": 2,
+      "n_train": 21556,
+      "n_test": 7188,
+      "road_crossing": {
+        "single_hrrp_cnn1d": 0.9369782971619366,
+        "scan_chain_esn_angle": 1.0
+      },
+      "uav_cap": {
+        "single_hrrp_cnn1d": 0.9243183082915971,
+        "scan_chain_esn_angle": 0.9993043962159154
+      }
+    }
+  ],
+  "summary": {
+    "road_crossing": {
+      "single_mean": 0.9386941198293451,
+      "single_std": 0.00204570070488896,
+      "scan_mean": 1.0,
+      "scan_std": 0.0
+    },
+    "uav_cap": {
+      "single_mean": 0.9251994064181043,
+      "single_std": 0.0006459093061205912,
+      "scan_mean": 0.9993971433871266,
+      "scan_std": 0.00013116430739874583
+    }
+  }
+}

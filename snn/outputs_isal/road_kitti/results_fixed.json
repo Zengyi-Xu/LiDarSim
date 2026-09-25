@@ -1,0 +1,13 @@
+{
+  "encoding_source": "utf-8",
+  "results": {
+    "road_crossing": {
+      "single_hrrp_cnn1d": 0.8724262659988871,
+      "scan_chain_esn_angle": 0.9232053422370617
+    },
+    "uav_cap": {
+      "single_hrrp_cnn1d": 0.7582081246521981,
+      "scan_chain_esn_angle": 0.8569838619922092
+    }
+  }
+}

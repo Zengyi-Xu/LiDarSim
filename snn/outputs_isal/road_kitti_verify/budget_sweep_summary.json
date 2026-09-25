@@ -1,0 +1,112 @@
+[
+ {
+  "tag": "budget1500",
+  "n_train": 4706,
+  "scenario": "road_crossing",
+  "single_mean": 0.77391846921797,
+  "single_std": 0.008412403813651891,
+  "scan_mean": 0.8572656683305602,
+  "scan_std": 0.011465498758001395,
+  "gain_mean": 0.08334719911259014,
+  "gain_std": 0.014337765544609919
+ },
+ {
+  "tag": "budget1500",
+  "n_train": 4706,
+  "scenario": "uav_cap",
+  "single_mean": 0.5592762063227954,
+  "single_std": 0.010834702521350416,
+  "scan_mean": 0.7453688297282307,
+  "scan_std": 0.0012591165928725798,
+  "gain_mean": 0.18609262340543542,
+  "gain_std": 0.010329568160122354
+ },
+ {
+  "tag": "budget300",
+  "n_train": 1200,
+  "scenario": "road_crossing",
+  "single_mean": 0.6298313124712601,
+  "single_std": 0.01745263702381118,
+  "scan_mean": 0.7539630678380406,
+  "scan_std": 0.007811417815899636,
+  "gain_mean": 0.12413175536678045,
+  "gain_std": 0.014658746254168738
+ },
+ {
+  "tag": "budget300",
+  "n_train": 1200,
+  "scenario": "uav_cap",
+  "single_mean": 0.4242479246835596,
+  "single_std": 0.024492968132948947,
+  "scan_mean": 0.6197633050170624,
+  "scan_std": 0.017138588752260348,
+  "gain_mean": 0.19551538033350277,
+  "gain_std": 0.04163088070989028
+ },
+ {
+  "tag": "budget3000",
+  "n_train": 7706,
+  "scenario": "road_crossing",
+  "single_mean": 0.8395437262357414,
+  "single_std": 0.013768074312315325,
+  "scan_mean": 0.9138149556400507,
+  "scan_std": 0.0012113298386321203,
+  "gain_mean": 0.07427122940430923,
+  "gain_std": 0.012979743226250996
+ },
+ {
+  "tag": "budget3000",
+  "n_train": 7706,
+  "scenario": "uav_cap",
+  "single_mean": 0.6347591888466414,
+  "single_std": 0.01506368261106463,
+  "scan_mean": 0.8072401774397973,
+  "scan_std": 0.0053034007204071755,
+  "gain_mean": 0.1724809885931559,
+  "gain_std": 0.018384302382245452
+ },
+ {
+  "tag": "budget750",
+  "n_train": 2802,
+  "scenario": "road_crossing",
+  "single_mean": 0.6756347003803063,
+  "single_std": 0.018994877174862593,
+  "scan_mean": 0.7949814986123959,
+  "scan_std": 0.005020370046152494,
+  "gain_mean": 0.1193467982320896,
+  "gain_std": 0.023726303368824704
+ },
+ {
+  "tag": "budget750",
+  "n_train": 2802,
+  "scenario": "uav_cap",
+  "single_mean": 0.4789418234145339,
+  "single_std": 0.01902087887699321,
+  "scan_mean": 0.6588421214924453,
+  "scan_std": 0.012670591386779647,
+  "gain_mean": 0.1799002980779114,
+  "gain_std": 0.0153761814743996
+ },
+ {
+  "tag": "full",
+  "n_train": 21558,
+  "scenario": "road_crossing",
+  "single_mean": 0.8712205527731404,
+  "single_std": 0.0037162577461786685,
+  "scan_mean": 0.923808198849935,
+  "scan_std": 0.0006655861665000699,
+  "gain_mean": 0.052587646076794635,
+  "gain_std": 0.0031805654237585346
+ },
+ {
+  "tag": "full",
+  "n_train": 21558,
+  "scenario": "uav_cap",
+  "single_mean": 0.7542199962901132,
+  "single_std": 0.0031731191605557556,
+  "scan_mean": 0.8600908922277871,
+  "scan_std": 0.002615897751098231,
+  "gain_mean": 0.10587089593767389,
+  "gain_std": 0.005777560692674503
+ }
+]
