@@ -66,7 +66,7 @@ def split(P, y, n_tr_per=None, seed=SEED):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n-tr-per", type=int, default=None,
-                    help="每类训练样本上限；缺省=每类75%（全量预算）")
+                    help="每类训练样本上限；缺省=每类75%%（全量预算）")
     ap.add_argument("--chunk", type=int, default=2048, help="GPU 仿真批大小")
     ap.add_argument("--cpu", action="store_true", help="强制 CPU")
     args = ap.parse_args()
