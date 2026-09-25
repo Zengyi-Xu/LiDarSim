@@ -261,3 +261,28 @@ road_crossing (az 全环, el ±5°) 与 uav_cap (az 全环, el 25-65°).
 
 road_object_extractor.py 提取的 KITTI 对象库 -> 同款扫描链 (类合并: car/van->car,
 truck/pedestrian/cyclist), 真实稀疏+遮挡点云下的诚实测试. KITTI 下载后即跑.
+
+## M7 信息量匹配分类对比 (2026-09-24, m7_matched_info.py)
+
+**动机**: M2 的 0.40 vs 0.676 对比不公平 (蓄水池吃有损脉冲编码, 基线吃全精度坐标);
+M7 把"编码格式 × 读出强度"两个变量分离. 结果 (3 种子, outputs_m7/results.json):
+
+| 配置 | acc | 解读 |
+|---|---|---|
+| E1 echo+ridge | 0.313 | 复现 M2 下界 |
+| E2 echo+MLP | 0.412 | 训练读出 +10pts |
+| E2b echo 模拟速率+MLP | 0.419 | 模拟驱动≈二值脉冲: 瓶颈不在二值化 |
+| E3 coord 脉冲+MLP | 0.526 | |
+| E3b coord 模拟速率+MLP | 0.371 | 模拟速率更差 (存疑, LSM 参数未调) |
+| E4 raw+MLP | 0.663 | 信息天花板 (150/类预算) |
+| E5b raw+sklearn LR | 0.610 | ≈ M2 基线 |
+
+**结论**:
+1. 瓶颈在 echo 编码格式本身 (径向直方图丢角度结构), 不在蓄水池也不在二值化 ->
+   支撑 SQ1 (编码是科学问题).
+2. 池规模 (256-1024) / 读出深度 / bin 数消融均饱和; 训练量是唯一缓升的杠杆.
+3. 池权重 4-8 bit 量化性能不降 (0.41-0.42) -> MRR 权重库 6.74 bit 足够, 硬件卖点成立.
+4. 输入时间抖动 σ=1-2 bin + 翻转 1-5% -> 0.36, 温和退化.
+5. 10 类 ModelNet40 @150/类 预算下此链路 <0.7; proposal 的 ">0.89" headline
+   用道路目标扫描链结果 (road car/person 0.892, road vehicles 0.919/0.963),
+   不用 ModelNet40 数字.
